@@ -14,10 +14,29 @@ const styles = StyleSheet.create({
 	},
 });
 
-const HomeScreen = ({navigation}) => {
-	const {bottomSheetContext, setBottomSheetContext} =
-		useContext(BottomSheetContext);
-	const onPressShowBs = () => bottomSheetContext.ref.current.snapToIndex(1);
+export const BottomSheet = ({navigation}) => {
+	return (
+		<PrimaryScreenView style={{backgroundColor: 'steelblue'}}>
+			<View style={[styles.contentContainer]}>
+				<Text>BottomSheet</Text>
+				<Button onPress={() => navigation.goBack()} title="Dismiss" />
+				<Button
+					title="Track Button"
+					onPress={() => console.log("Track")}
+				/>
+			</View>
+		</PrimaryScreenView>
+	);
+}
+
+
+export const HomeScreen = ({navigation}) => {
+	const {bottomSheetContext, setBottomSheetContext} = useContext(BottomSheetContext);
+	//const onPressShowBs = () => bottomSheetContext.ref.current.snapToIndex(1);
+
+	const onPressShowBs = () => {
+		navigation.navigate('BottomSheet');
+	};
 
 	const initScreenBs = () => {
 		setBottomSheetContext({
@@ -58,4 +77,4 @@ const HomeScreen = ({navigation}) => {
 	);
 };
 
-export default HomeScreen;
+
