@@ -5,6 +5,8 @@
 #import <React/RCTRootView.h>
 
 #import <React/RCTAppSetupUtils.h>
+#import <Pendo/PendoManager.h>
+
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -55,6 +57,16 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
+}
+
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    if ([[url scheme] containsString:@"pendo"]) {
+        [[PendoManager sharedManager] initWithUrl:url];
+        return YES;
+    }
+    //  your code here ...
+    return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

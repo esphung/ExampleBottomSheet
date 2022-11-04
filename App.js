@@ -18,7 +18,16 @@ import {BottomSheetContext} from './src/contexts';
 
 import {AppStack} from './src/navigators';
 
-const App = () => {
+import {withPendoRN, PendoSDK, NavigationLibraryType} from "rn-pendo-sdk";
+
+const navigationOptions = { 'library': NavigationLibraryType.ReactNavigation };
+const key = "YOUR KEY";
+
+//note the following API will only setup initial configuration, to start collect analytics use start session
+PendoSDK.setup(key,navigationOptions,null);
+PendoSDK.startSession("v1","v2");
+
+const App = (props) => {
 	const snapPoints = useMemo(() => ['20%', '40%', '88%'], [])
 	// state
 	const [bottomSheetContext, setBottomSheetContext] = useState({
@@ -60,12 +69,17 @@ const App = () => {
 	const getStackNavigator = () => {
 		return <AppStack />;
 	};
-
+	const navigationRef = useRef();
 	return (
 		<BottomSheetContext.Provider
 			value={{bottomSheetContext, setBottomSheetContext}}>
 			<SafeAreaProvider>
-				<NavigationContainer>
+				<NavigationContainer
+				ref={navigationRef}
+				 onStateChange={()=> {
+      						const state = navigationRef.current.getRootState()
+      						props.onStateChange(state);
+    			}}>
 					<GestureHandlerRootView style={styles.container}>
 						{getStackNavigator()}
 						<PrimaryBottomSheet />
@@ -85,4 +99,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default App;
+export default withPendoRN(App);
